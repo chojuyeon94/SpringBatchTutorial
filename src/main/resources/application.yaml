@@ -1,14 +1,14 @@
 spring:
   batch:
     job:
-      names: ${job.name:NONE}
+      names: ${job.name:NONE} // 파라미터로 받은 job.name을 job.names에 넣어준다.
     jdbc:
       initialize-schema: ALWAYS
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/spring_batch
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: whwndus9408@
+    password: ${database_password}
   jpa:
     show-sql: true
     hibernate:
