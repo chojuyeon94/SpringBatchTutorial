@@ -1,4 +1,4 @@
-package com.example.SpringBatchTutorial.job;
+package com.example.SpringBatchTutorial.job.validatedParam;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -16,9 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/*
+    * run : --spring.batch.job.names=validatedParamJob
+ */
+
 @Configuration
 @RequiredArgsConstructor
-public class HelloWorldJobConfig {
+public class ValidatedParamConfig {
 
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
@@ -27,31 +31,32 @@ public class HelloWorldJobConfig {
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job helloWorld(){
-        return jobBuilderFactory.get("helloWorldJob")
+    public Job validatedParamJob(Step validatedParamStep){
+        return jobBuilderFactory.get("validatedParamJob")
                 .incrementer(new RunIdIncrementer())
-                .start(helloWorldStep())
+                .start(validatedParamStep)
                 .build();
     }
 
     @JobScope
     @Bean
-    public Step helloWorldStep(){
-        return stepBuilderFactory.get("helloWorldStep")
-                .tasklet(helloWorldTasklet())
+    public Step validatedParamStep(Tasklet validatedParamTasklet){
+        return stepBuilderFactory.get("validatedParamStep")
+                .tasklet(validatedParamTasklet)
                 .build();
     }
 
     @StepScope
     @Bean
-    public Tasklet helloWorldTasklet(){
+    public Tasklet validatedParamTasklet(){
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                System.out.println("Hello World Spring Batch");
+                System.out.println("validated Param Tasklet");
                 return RepeatStatus.FINISHED;
             }
         };
     }
+
 
 }
