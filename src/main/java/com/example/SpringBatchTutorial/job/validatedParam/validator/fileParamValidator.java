@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 public class fileParamValidator implements JobParametersValidator {
     @Override
     public void validate(JobParameters parameters) throws JobParametersInvalidException{
+        assert parameters != null;
         String fileName = parameters.getString("fileName");
 
         if(!StringUtils.endsWithIgnoreCase(fileName, "csv"))

@@ -1,5 +1,6 @@
 package com.example.SpringBatchTutorial.job.validatedParam;
 
+import com.example.SpringBatchTutorial.job.validatedParam.validator.fileParamValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -8,6 +9,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.job.CompositeJobParametersValidator;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
 
 /*
     * desc : 파일 이름 파라미터 전달 그리고 검증
@@ -36,9 +40,18 @@ public class ValidatedParamConfig {
     public Job validatedParamJob(Step validatedParamStep){
         return jobBuilderFactory.get("validatedParamJob")
                 .incrementer(new RunIdIncrementer())
-                .validator()
+                //.validator(new fileParamValidator())
+                .validator(multiValidator())
                 .start(validatedParamStep)
                 .build();
+    }
+
+    private CompositeJobParametersValidator multiValidator(){
+
+        CompositeJobParametersValidator validator = new CompositeJobParametersValidator();
+        validator.setValidators(Arrays.asList(new fileParamValidator()));
+
+        return validator;
     }
 
     @JobScope
